@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-// Audio trigger for dancing & sad cats
+const purrCount = ref(0);
+const credentials = ref(false);
+const links = ref(false);
+const isLightboxOpen = ref(false);
+
 const playMeow = () => {
   const audio = new Audio('/meow.mp3');
   audio.volume = 0.5;
@@ -9,7 +13,6 @@ const playMeow = () => {
   purrCount.value++;
 };
 
-// Audio trigger specifically for the spinning cat
 const playSpinSound = () => {
   const audio = new Audio('/spin.mp3');
   audio.volume = 0.5;
@@ -17,15 +20,9 @@ const playSpinSound = () => {
   purrCount.value += 2;
 };
 
-const credentials = ref(false);
-const links = ref(false);
-const isLightboxOpen = ref(false);
-const purrCount = ref(0);
-
-// Cat speech bubble lines
 const catQuotes = [
   "Click me or I eat the CAT5 cable!",
-    "ppst dito ang tingin",
+  "ppst dito ang tingin",
 ];
 const currentCatQuote = ref(catQuotes[0]);
 
@@ -45,7 +42,6 @@ const toggleLink = () => {
   links.value = !links.value;
 };
 
-// Achievement carousel data & index state
 const currentAchievementIndex = ref(0);
 
 const achievements = ref([
@@ -89,10 +85,8 @@ const prevAchievement = () => {
 
 <template>
   <div class="min-h-screen bg-[#121318] text-slate-100 font-mono relative overflow-x-hidden selection:bg-[#f43f5e] selection:text-white pb-36">
-    <!-- Subtle Retro CRT Scanline Grid Background -->
     <div class="fixed inset-0 pointer-events-none opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-    <!-- Retro Cat Shrine Top Navigation Bar -->
     <header class="border-b-4 border-black bg-[#1e2029] p-3 shadow-[0_4px_0_0_#000] sticky top-0 z-30">
       <div class="max-w-[1000px] mx-auto flex flex-wrap justify-between items-center gap-3">
         <div class="flex items-center gap-3">
@@ -108,7 +102,6 @@ const prevAchievement = () => {
           </div>
         </div>
 
-        <!-- Fun Purr / Meow Clicker Widget -->
         <div class="flex items-center gap-2 bg-[#161821] border-2 border-black px-3 py-1.5 shadow-[3px_3px_0_0_#000] rounded">
           <span class="text-xs text-slate-400">MEOW_COUNT:</span>
           <span class="text-[#ff5e7e] font-black text-sm">{{ purrCount }} 🐾</span>
@@ -116,16 +109,11 @@ const prevAchievement = () => {
       </div>
     </header>
 
-    <!-- Main Content Grid -->
     <main class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px] mx-auto mt-8 px-5">
-
-      <!-- Card 1: About Me (Window Frame with Cat Ears) -->
       <section class="relative bg-[#1c1f2b] border-4 border-black rounded-lg shadow-[6px_6px_0_0_#000] transition-transform hover:-translate-y-1">
-        <!-- Cat Ear Accents on Window Top -->
         <div class="absolute -top-3 left-4 w-4 h-4 bg-[#ff5e7e] border-t-2 border-l-2 border-black rotate-45 z-0"></div>
         <div class="absolute -top-3 left-10 w-4 h-4 bg-[#ff5e7e] border-t-2 border-r-2 border-black rotate-45 z-0"></div>
 
-        <!-- Window Header -->
         <div class="bg-[#2a2e40] border-b-4 border-black px-4 py-2 flex justify-between items-center relative z-10">
           <span class="text-xs font-bold uppercase tracking-wider text-[#ffde59] flex items-center gap-1.5">
             <span>🐾</span> bio.cat
@@ -145,7 +133,7 @@ const prevAchievement = () => {
             "I am a humble (HUMBLE!?) Computer Engineering student from CSU Carig trying to design a website."
           </p>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Aiming to become a full-stack engineer. No artistic talent, just pure autistic.
+            Aiming to become a full-stack engineer. Not artistic, just pure autistic.
           </p>
 
           <div class="mt-5 pt-3 border-t-2 border-[#2b3044] flex flex-wrap gap-2 text-xs">
@@ -156,13 +144,10 @@ const prevAchievement = () => {
         </div>
       </section>
 
-      <!-- Card 2: Skills & Tech Specs -->
       <section class="relative bg-[#1c1f2b] border-4 border-black rounded-lg shadow-[6px_6px_0_0_#000] transition-transform hover:-translate-y-1">
-        <!-- Cat Ear Accents on Window Top -->
         <div class="absolute -top-3 right-10 w-4 h-4 bg-[#5865f2] border-t-2 border-l-2 border-black rotate-45 z-0"></div>
         <div class="absolute -top-3 right-4 w-4 h-4 bg-[#5865f2] border-t-2 border-r-2 border-black rotate-45 z-0"></div>
 
-        <!-- Window Header -->
         <div class="bg-[#2a2e40] border-b-4 border-black px-4 py-2 flex justify-between items-center relative z-10">
           <span class="text-xs font-bold uppercase tracking-wider text-[#70e2ff] flex items-center gap-1.5">
             <span>⚡</span> skills.bin
@@ -211,15 +196,11 @@ const prevAchievement = () => {
       </section>
     </main>
 
-    <!-- Interactive Bottom Cat Bar -->
-
-    <!-- Left Dancing Cat with Thought Bubble -->
     <div
         class="fixed bottom-0 left-2 md:left-6 cursor-pointer z-40 transition-transform duration-150 hover:scale-105 select-none group"
         @click="toggleCredentials"
         title="Click me for Achievements!"
     >
-      <!-- Comic Thought / Speech Bubble -->
       <div class="absolute -top-12 left-8 bg-white text-black text-xs font-bold py-1.5 px-3 rounded-xl border-2 border-black shadow-[3px_3px_0_0_#000] whitespace-nowrap pointer-events-none transition-all group-hover:-translate-y-1">
         {{ currentCatQuote }}
         <div class="absolute -bottom-2 left-4 w-3 h-3 bg-white border-b-2 border-r-2 border-black rotate-45"></div>
@@ -231,7 +212,6 @@ const prevAchievement = () => {
       </span>
     </div>
 
-    <!-- Center Spinning Cat (Interactive DJ Cat) -->
     <div
         class="fixed bottom-3 left-1/2 -translate-x-1/2 cursor-pointer z-40 transition-transform duration-150 hover:scale-110 active:scale-95 select-none flex flex-col items-center"
         @click="playSpinSound"
@@ -243,7 +223,6 @@ const prevAchievement = () => {
       <img class="w-[150px] md:w-[180px] h-auto block pointer-events-none drop-shadow-[0_0_15px_rgba(255,222,89,0.3)]" src="/spinn.gif" alt="Cat Spin" />
     </div>
 
-    <!-- Right Sad Cat with Social Links Badge -->
     <div
         class="fixed bottom-0 right-2 md:right-6 cursor-pointer z-40 transition-transform duration-150 hover:scale-105 select-none group"
         @click="toggleLink"
@@ -259,7 +238,6 @@ const prevAchievement = () => {
       </span>
     </div>
 
-    <!-- Retro Backdrop -->
     <Transition name="fade-backdrop">
       <div
           v-if="credentials || links"
@@ -268,13 +246,11 @@ const prevAchievement = () => {
       ></div>
     </Transition>
 
-    <!-- Achievements Modal (Y2K / Retro Terminal Game Box) -->
     <Transition name="fade-popup">
       <div
           v-if="credentials"
           class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] max-w-[540px] bg-[#181a24] border-4 border-black rounded-lg shadow-[8px_8px_0_0_#000] z-50 text-slate-100 p-0 overflow-hidden"
       >
-        <!-- Modal Titlebar -->
         <div class="bg-[#ff5e7e] text-black border-b-4 border-black px-4 py-2.5 flex justify-between items-center font-black">
           <div class="flex items-center gap-2 text-sm tracking-wider">
             <span>🏆</span> ACHIEVEMENTS_VAULT.EXE
@@ -288,9 +264,7 @@ const prevAchievement = () => {
         </div>
 
         <div class="p-5">
-          <!-- Slide Preview Area -->
           <div class="relative bg-black border-4 border-black rounded-md overflow-hidden shadow-[4px_4px_0_0_#000]">
-            <!-- Image with Zoom Hint -->
             <div class="relative overflow-hidden cursor-zoom-in group" @click="isLightboxOpen = true">
               <img
                   :src="achievements[currentAchievementIndex].image"
@@ -306,7 +280,6 @@ const prevAchievement = () => {
               </div>
             </div>
 
-            <!-- Slide Caption -->
             <div class="p-3 bg-[#1e2130] border-t-2 border-black">
               <h3 class="text-base font-black text-[#ffde59] m-0">
                 {{ achievements[currentAchievementIndex].title }}
@@ -317,7 +290,6 @@ const prevAchievement = () => {
             </div>
           </div>
 
-          <!-- Carousel Controls -->
           <div class="flex justify-between items-center mt-4">
             <button
                 class="bg-[#2a2e40] hover:bg-[#ff5e7e] hover:text-black text-white font-black border-2 border-black px-4 py-1.5 rounded shadow-[3px_3px_0_0_#000] text-sm cursor-pointer transition select-none flex items-center gap-1 active:translate-x-0.5 active:translate-y-0.5"
@@ -326,7 +298,6 @@ const prevAchievement = () => {
               ◀ PREV
             </button>
 
-            <!-- Bead Indicators -->
             <div class="flex gap-2 items-center">
               <button
                   v-for="(_, index) in achievements"
@@ -348,7 +319,6 @@ const prevAchievement = () => {
       </div>
     </Transition>
 
-    <!-- Social Links Modal (Retro BBS Style) -->
     <Transition name="fade-popup">
       <div
           v-if="links"
@@ -410,7 +380,6 @@ const prevAchievement = () => {
       </div>
     </Transition>
 
-    <!-- Fullscreen Lightbox -->
     <Transition name="fade-lightbox">
       <div
           v-if="isLightboxOpen"
@@ -445,7 +414,6 @@ const prevAchievement = () => {
   </div>
 </template>
 
-<!-- Unscoped cursor overrides -->
 <style>
 html, body {
   cursor: url('/cursor.png') 0 0, auto !important;
@@ -461,7 +429,6 @@ button,
 </style>
 
 <style scoped>
-/* Modal Pop Transitions */
 .fade-popup-enter-active,
 .fade-popup-leave-active {
   transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
