@@ -1,281 +1,489 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+// Audio trigger for dancing & sad cats
+const playMeow = () => {
+  const audio = new Audio('/meow.mp3');
+  audio.volume = 0.5;
+  audio.play().catch(() => {});
+  purrCount.value++;
+};
+
+// Audio trigger specifically for the spinning cat
+const playSpinSound = () => {
+  const audio = new Audio('/spin.mp3');
+  audio.volume = 0.5;
+  audio.play().catch(() => {});
+  purrCount.value += 2;
+};
+
 const credentials = ref(false);
 const links = ref(false);
+const isLightboxOpen = ref(false);
+const purrCount = ref(0);
+
+// Cat speech bubble lines
+const catQuotes = [
+  "Click me or I eat the CAT5 cable!",
+    "ppst dito ang tingin",
+];
+const currentCatQuote = ref(catQuotes[0]);
+
+const cycleQuote = () => {
+  const rand = Math.floor(Math.random() * catQuotes.length);
+  currentCatQuote.value = catQuotes[rand];
+};
 
 const toggleCredentials = () => {
+  playMeow();
+  cycleQuote();
   credentials.value = !credentials.value;
 };
 
 const toggleLink = () => {
+  playMeow();
   links.value = !links.value;
+};
+
+// Achievement carousel data & index state
+const currentAchievementIndex = ref(0);
+
+const achievements = ref([
+  {
+    title: "Dean's Lister 2-2025-2026",
+    description: "Nakachamba ng isang sem.",
+    image: "/cert1.jpg",
+    tag: "CHAMBA",
+  },
+  {
+    title: "Regional ITE Convention",
+    description: "General Programming Champion",
+    image: "/cert2.jpg",
+    tag: "lah wala na si conde eh",
+  },
+  {
+    title: "National CodeChum Programming Season 2",
+    description: "Ranked Top 4 Group Staged and Top 16 Nationwide",
+    image: "/cert3.png",
+    tag: "TOP_4_GROUPSTAGE_NATIONAL",
+  },
+  {
+    title: "Regional CpE Challenge 2025",
+    description: "C Programming 1st Runner Up",
+    image: "/cert4.jpg",
+    tag: "ayan ihi pa kasi",
+  },
+]);
+
+const nextAchievement = () => {
+  currentAchievementIndex.value =
+      (currentAchievementIndex.value + 1) % achievements.value.length;
+};
+
+const prevAchievement = () => {
+  currentAchievementIndex.value =
+      (currentAchievementIndex.value - 1 + achievements.value.length) %
+      achievements.value.length;
 };
 </script>
 
 <template>
-  <div class="Intro">
-    <header class="header">
-      Roan Carmelo G. Morgado
+  <div class="min-h-screen bg-[#121318] text-slate-100 font-mono relative overflow-x-hidden selection:bg-[#f43f5e] selection:text-white pb-36">
+    <!-- Subtle Retro CRT Scanline Grid Background -->
+    <div class="fixed inset-0 pointer-events-none opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+    <!-- Retro Cat Shrine Top Navigation Bar -->
+    <header class="border-b-4 border-black bg-[#1e2029] p-3 shadow-[0_4px_0_0_#000] sticky top-0 z-30">
+      <div class="max-w-[1000px] mx-auto flex flex-wrap justify-between items-center gap-3">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl filter drop-shadow">🐱</span>
+          <div>
+            <div class="text-xl md:text-2xl font-black tracking-wider text-[#ffde59] uppercase drop-shadow-[2px_2px_0_#000]">
+              Roan Carmelo G. Morgado
+            </div>
+            <div class="text-xs text-[#a0a5b5] flex items-center gap-2">
+              <span class="bg-[#2a2d3d] text-emerald-400 px-1.5 py-0.5 rounded font-bold border border-black text-[10px]">PORTFOLIO</span>
+              <span>BSCpE-4A | CSU CARIG</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fun Purr / Meow Clicker Widget -->
+        <div class="flex items-center gap-2 bg-[#161821] border-2 border-black px-3 py-1.5 shadow-[3px_3px_0_0_#000] rounded">
+          <span class="text-xs text-slate-400">MEOW_COUNT:</span>
+          <span class="text-[#ff5e7e] font-black text-sm">{{ purrCount }} 🐾</span>
+        </div>
+      </div>
     </header>
-    <h1>BSCpE-4A</h1>
-  </div>
 
-  <main class="Contents">
-    <section class="card About-me">
-      <h2 class="card-title text-2xl font-bold">About Me</h2>
-      <p>I am a humble (HUMBLE!?) Computer Engineering student from CSU Carig trying to design a website</p>
-      <p>I want to be a full stack developer but unfortunately I don't have a knack for designs</p>
-    </section>
+    <!-- Main Content Grid -->
+    <main class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1000px] mx-auto mt-8 px-5">
 
-    <section class="card Skills">
-      <h2 class="card-title text-2xl font-bold">Skills & Interest</h2>
-      <p>These are my current skills</p>
-      <p>
-        Programming Languages: C, C++, Java, Python<br>
-        Hardware Skills: PCB Design, Embedded Systems, 3D Design, to be continued
-      </p>
-    </section>
-  </main>
+      <!-- Card 1: About Me (Window Frame with Cat Ears) -->
+      <section class="relative bg-[#1c1f2b] border-4 border-black rounded-lg shadow-[6px_6px_0_0_#000] transition-transform hover:-translate-y-1">
+        <!-- Cat Ear Accents on Window Top -->
+        <div class="absolute -top-3 left-4 w-4 h-4 bg-[#ff5e7e] border-t-2 border-l-2 border-black rotate-45 z-0"></div>
+        <div class="absolute -top-3 left-10 w-4 h-4 bg-[#ff5e7e] border-t-2 border-r-2 border-black rotate-45 z-0"></div>
 
-  <div class="Catto" @click="toggleCredentials" title="psst Click me">
-    <img class="catgif" src="/catdance.gif" alt="Dancing Cat" />
-    <span class="click-hint">click me ^</span>
-  </div>
+        <!-- Window Header -->
+        <div class="bg-[#2a2e40] border-b-4 border-black px-4 py-2 flex justify-between items-center relative z-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#ffde59] flex items-center gap-1.5">
+            <span>🐾</span> bio.cat
+          </span>
+          <div class="flex gap-1.5">
+            <span class="w-3 h-3 rounded-full bg-[#ff5f56] border border-black inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#27c93f] border border-black inline-block"></span>
+          </div>
+        </div>
 
-  <div class="cattosad" @click="toggleLink" title="pst Click me">
-    <img class="catsad" src="/cattosad.png" alt="Sad Cat" />
-  </div>
+        <div class="p-6">
+          <h2 class="text-xl font-black text-white mb-3 flex items-center gap-2">
+            <span>HUMBLE COMPUTER ENGINEER</span>
+          </h2>
+          <p class="mb-3 text-sm text-slate-300 leading-relaxed border-l-2 border-[#ff5e7e] pl-3 italic">
+            "I am a humble (HUMBLE!?) Computer Engineering student from CSU Carig trying to design a website."
+          </p>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Aiming to become a full-stack engineer. No artistic talent, just pure autistic.
+          </p>
 
-  <div class="CatSpin">
-    <img class="catspin" src="/spinn.gif" alt="Cat Spin" />
-  </div>
+          <div class="mt-5 pt-3 border-t-2 border-[#2b3044] flex flex-wrap gap-2 text-xs">
+            <span class="bg-[#282d40] border border-black px-2 py-1 rounded text-cyan-300">#CPE</span>
+            <span class="bg-[#282d40] border border-black px-2 py-1 rounded text-yellow-300">#Elective2</span>
+            <span class="bg-[#282d40] border border-black px-2 py-1 rounded text-rose-300">#CSU_Carig</span>
+          </div>
+        </div>
+      </section>
 
-  <Transition name="fade">
-    <div v-if="credentials" class="credentials-popup">
-      <div class="popup-header">
-        <h2>Achievements !!</h2>
-        <button class="close-btn" @click.stop="credentials = false">&times;</button>
+      <!-- Card 2: Skills & Tech Specs -->
+      <section class="relative bg-[#1c1f2b] border-4 border-black rounded-lg shadow-[6px_6px_0_0_#000] transition-transform hover:-translate-y-1">
+        <!-- Cat Ear Accents on Window Top -->
+        <div class="absolute -top-3 right-10 w-4 h-4 bg-[#5865f2] border-t-2 border-l-2 border-black rotate-45 z-0"></div>
+        <div class="absolute -top-3 right-4 w-4 h-4 bg-[#5865f2] border-t-2 border-r-2 border-black rotate-45 z-0"></div>
+
+        <!-- Window Header -->
+        <div class="bg-[#2a2e40] border-b-4 border-black px-4 py-2 flex justify-between items-center relative z-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#70e2ff] flex items-center gap-1.5">
+            <span>⚡</span> skills.bin
+          </span>
+          <span class="text-[10px] bg-black text-emerald-400 font-bold px-2 py-0.5 rounded border border-gray-700">STATUS: ACTIVE</span>
+        </div>
+
+        <div class="p-6">
+          <h3 class="text-sm font-bold uppercase text-[#ffde59] tracking-wider mb-2 flex items-center gap-1">
+            <span>🐾</span> Languages & Software
+          </h3>
+          <div class="grid grid-cols-2 gap-2 mb-5">
+            <div class="bg-[#151722] border-2 border-black p-2 rounded text-xs flex items-center gap-2">
+              <span class="text-rose-400 font-bold">C / C++</span>
+              <span class="text-[10px] text-gray-500 ml-auto">[LOW-LEVEL]</span>
+            </div>
+            <div class="bg-[#151722] border-2 border-black p-2 rounded text-xs flex items-center gap-2">
+              <span class="text-amber-400 font-bold">Java</span>
+              <span class="text-[10px] text-gray-500 ml-auto">[OOP]</span>
+            </div>
+            <div class="bg-[#151722] border-2 border-black p-2 rounded text-xs flex items-center gap-2">
+              <span class="text-emerald-400 font-bold">Python</span>
+              <span class="text-[10px] text-gray-500 ml-auto">[SCRIPTS]</span>
+            </div>
+            <div class="bg-[#151722] border-2 border-black p-2 rounded text-xs flex items-center gap-2">
+              <span class="text-cyan-400 font-bold">Vue / JS</span>
+              <span class="text-[10px] text-gray-500 ml-auto">[WEB]</span>
+            </div>
+          </div>
+
+          <h3 class="text-sm font-bold uppercase text-[#ffde59] tracking-wider mb-2 flex items-center gap-1">
+            <span>🐾</span> Hardware Engineering
+          </h3>
+          <ul class="text-xs text-slate-300 space-y-1.5 pl-1">
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-400">▶</span> PCB Schematic & Routing
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-400">▶</span> Embedded Microcontroller Systems
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-400">▶</span> 3D Modeling & Prototyping
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- Interactive Bottom Cat Bar -->
+
+    <!-- Left Dancing Cat with Thought Bubble -->
+    <div
+        class="fixed bottom-0 left-2 md:left-6 cursor-pointer z-40 transition-transform duration-150 hover:scale-105 select-none group"
+        @click="toggleCredentials"
+        title="Click me for Achievements!"
+    >
+      <!-- Comic Thought / Speech Bubble -->
+      <div class="absolute -top-12 left-8 bg-white text-black text-xs font-bold py-1.5 px-3 rounded-xl border-2 border-black shadow-[3px_3px_0_0_#000] whitespace-nowrap pointer-events-none transition-all group-hover:-translate-y-1">
+        {{ currentCatQuote }}
+        <div class="absolute -bottom-2 left-4 w-3 h-3 bg-white border-b-2 border-r-2 border-black rotate-45"></div>
       </div>
-      <div class="popup-body">
-        <ul>
-          <li>Dean's Lister 2-2025-2026</li>
-          <li>Regional ITE Convention: General Programming Champion</li>
-          <li>National CodeChum Programming Season 2: Top 4</li>
-          <li>Regional CpE Challenge 2025: C Programming 1st Runner Up</li>
-        </ul>
-      </div>
+
+      <img class="w-[180px] md:w-[210px] h-auto mix-blend-screen pointer-events-none block" src="/catdancee.gif" alt="Dancing Cat" />
+      <span class="absolute bottom-3 left-4 bg-[#ff5e7e] text-black text-[11px] font-black px-2 py-0.5 rounded border-2 border-black shadow-[2px_2px_0_0_#000] pointer-events-none">
+        🏆 ACHIEVEMENTS ^
+      </span>
     </div>
-  </Transition>
 
-  <Transition name="fade">
-    <div v-if="links" class="credentials-popup">
-      <div class="popup-header">
-        <h2>Links wowowowo</h2>
-        <button class="close-btn" @click.stop="links = false">&times;</button>
+    <!-- Center Spinning Cat (Interactive DJ Cat) -->
+    <div
+        class="fixed bottom-3 left-1/2 -translate-x-1/2 cursor-pointer z-40 transition-transform duration-150 hover:scale-110 active:scale-95 select-none flex flex-col items-center"
+        @click="playSpinSound"
+        title="Bother the spin cat!"
+    >
+      <div class="bg-black/80 border-2 border-[#ffde59] text-[#ffde59] text-[10px] font-bold px-2 py-0.5 rounded shadow-[2px_2px_0_0_#000] mb-1">
+        SPIN MEOW 🌀
       </div>
-      <div class="popup-body">
-        <ul>
-          <li>Facebook: <a href="https://www.facebook.com/roan.morgado.39" target="_blank" rel="noopener noreferrer">Roan Morgado</a></li>
-          <li>Email: <a href="mailto:roancarmelomorgado@gmail.com">roancarmelomorgado@gmail.com</a></li>
-          <li>Github: <a href="https://github.com/Melomorgado" target="_blank" rel="noopener noreferrer">Melomorgado</a></li>
-        </ul>
-      </div>
+      <img class="w-[150px] md:w-[180px] h-auto block pointer-events-none drop-shadow-[0_0_15px_rgba(255,222,89,0.3)]" src="/spinn.gif" alt="Cat Spin" />
     </div>
-  </Transition>
+
+    <!-- Right Sad Cat with Social Links Badge -->
+    <div
+        class="fixed bottom-0 right-2 md:right-6 cursor-pointer z-40 transition-transform duration-150 hover:scale-105 select-none group"
+        @click="toggleLink"
+        title="Click me for Social Links!"
+    >
+      <div class="absolute -top-10 right-4 bg-[#70e2ff] text-black text-xs font-bold py-1 px-3 rounded-lg border-2 border-black shadow-[3px_3px_0_0_#000] pointer-events-none">
+        Need coffee & links...
+        <div class="absolute -bottom-1.5 right-6 w-2.5 h-2.5 bg-[#70e2ff] border-b-2 border-r-2 border-black rotate-45"></div>
+      </div>
+      <img class="w-[130px] md:w-[150px] h-auto mix-blend-screen pointer-events-none block drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]" src="/cattosad.png" alt="Sad Cat" />
+      <span class="absolute bottom-3 right-4 bg-[#70e2ff] text-black text-[11px] font-black px-2 py-0.5 rounded border-2 border-black shadow-[2px_2px_0_0_#000] pointer-events-none">
+        LINKS / CONTACT ^
+      </span>
+    </div>
+
+    <!-- Retro Backdrop -->
+    <Transition name="fade-backdrop">
+      <div
+          v-if="credentials || links"
+          class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 transition-opacity"
+          @click="credentials = false; links = false"
+      ></div>
+    </Transition>
+
+    <!-- Achievements Modal (Y2K / Retro Terminal Game Box) -->
+    <Transition name="fade-popup">
+      <div
+          v-if="credentials"
+          class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] max-w-[540px] bg-[#181a24] border-4 border-black rounded-lg shadow-[8px_8px_0_0_#000] z-50 text-slate-100 p-0 overflow-hidden"
+      >
+        <!-- Modal Titlebar -->
+        <div class="bg-[#ff5e7e] text-black border-b-4 border-black px-4 py-2.5 flex justify-between items-center font-black">
+          <div class="flex items-center gap-2 text-sm tracking-wider">
+            <span>🏆</span> ACHIEVEMENTS_VAULT.EXE
+          </div>
+          <button
+              class="bg-black text-white hover:bg-white hover:text-black border-2 border-black w-7 h-7 flex items-center justify-center font-black text-sm cursor-pointer transition shadow-[2px_2px_0_0_#000]"
+              @click.stop="credentials = false"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="p-5">
+          <!-- Slide Preview Area -->
+          <div class="relative bg-black border-4 border-black rounded-md overflow-hidden shadow-[4px_4px_0_0_#000]">
+            <!-- Image with Zoom Hint -->
+            <div class="relative overflow-hidden cursor-zoom-in group" @click="isLightboxOpen = true">
+              <img
+                  :src="achievements[currentAchievementIndex].image"
+                  :alt="achievements[currentAchievementIndex].title"
+                  class="w-full h-64 object-cover block transition-transform duration-200 group-hover:scale-105"
+                  @error="(e: any) => { e.target.src = 'https://placehold.co/600x400/181a24/ff5e7e?text=Photo+Pending+Upload'; }"
+              />
+              <div class="absolute top-2 right-2 bg-black/80 text-[#ffde59] text-[10px] font-bold px-2 py-1 rounded border border-black shadow">
+                {{ achievements[currentAchievementIndex].tag }}
+              </div>
+              <div class="absolute bottom-2 right-2 bg-[#ff5e7e] text-black font-black text-[11px] px-2.5 py-1 rounded border-2 border-black shadow-[2px_2px_0_0_#000] opacity-0 group-hover:opacity-100 transition-opacity">
+                🔍 CLICK TO ENLARGE
+              </div>
+            </div>
+
+            <!-- Slide Caption -->
+            <div class="p-3 bg-[#1e2130] border-t-2 border-black">
+              <h3 class="text-base font-black text-[#ffde59] m-0">
+                {{ achievements[currentAchievementIndex].title }}
+              </h3>
+              <p class="text-xs text-slate-300 mt-1 m-0">
+                {{ achievements[currentAchievementIndex].description }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Carousel Controls -->
+          <div class="flex justify-between items-center mt-4">
+            <button
+                class="bg-[#2a2e40] hover:bg-[#ff5e7e] hover:text-black text-white font-black border-2 border-black px-4 py-1.5 rounded shadow-[3px_3px_0_0_#000] text-sm cursor-pointer transition select-none flex items-center gap-1 active:translate-x-0.5 active:translate-y-0.5"
+                @click="prevAchievement"
+            >
+              ◀ PREV
+            </button>
+
+            <!-- Bead Indicators -->
+            <div class="flex gap-2 items-center">
+              <button
+                  v-for="(_, index) in achievements"
+                  :key="index"
+                  class="w-3.5 h-3.5 rounded-full border-2 border-black transition-all cursor-pointer p-0"
+                  :class="currentAchievementIndex === index ? 'bg-[#ffde59] scale-125' : 'bg-gray-700 hover:bg-gray-500'"
+                  @click="currentAchievementIndex = index"
+              ></button>
+            </div>
+
+            <button
+                class="bg-[#2a2e40] hover:bg-[#ff5e7e] hover:text-black text-white font-black border-2 border-black px-4 py-1.5 rounded shadow-[3px_3px_0_0_#000] text-sm cursor-pointer transition select-none flex items-center gap-1 active:translate-x-0.5 active:translate-y-0.5"
+                @click="nextAchievement"
+            >
+              NEXT ▶
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Social Links Modal (Retro BBS Style) -->
+    <Transition name="fade-popup">
+      <div
+          v-if="links"
+          class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[460px] bg-[#181a24] border-4 border-black rounded-lg shadow-[8px_8px_0_0_#000] z-50 text-slate-100 p-0 overflow-hidden"
+      >
+        <div class="bg-[#70e2ff] text-black border-b-4 border-black px-4 py-2.5 flex justify-between items-center font-black">
+          <div class="flex items-center gap-2 text-sm tracking-wider">
+            <span>🌐</span> COMM_LINKS.SYS
+          </div>
+          <button
+              class="bg-black text-white hover:bg-white hover:text-black border-2 border-black w-7 h-7 flex items-center justify-center font-black text-sm cursor-pointer transition shadow-[2px_2px_0_0_#000]"
+              @click.stop="links = false"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="p-6">
+          <div class="text-xs text-slate-400 mb-4 pb-2 border-b border-gray-700">
+            CONNECT TO DEVELOPER GATEWAY:
+          </div>
+
+          <div class="space-y-3">
+            <a
+                href="https://github.com/Melomorgado"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-between p-3 bg-[#11131c] hover:bg-[#252a3d] border-2 border-black rounded shadow-[3px_3px_0_0_#000] text-sm transition group"
+            >
+              <div class="flex items-center gap-2 text-white font-bold">
+                <span>💻</span> GitHub
+              </div>
+              <span class="text-xs text-[#70e2ff] font-mono group-hover:underline">@Melomorgado ↗</span>
+            </a>
+
+            <a
+                href="mailto:roancarmelomorgado@gmail.com"
+                class="flex items-center justify-between p-3 bg-[#11131c] hover:bg-[#252a3d] border-2 border-black rounded shadow-[3px_3px_0_0_#000] text-sm transition group"
+            >
+              <div class="flex items-center gap-2 text-white font-bold">
+                <span>📬</span> Email
+              </div>
+              <span class="text-xs text-[#ff5e7e] font-mono group-hover:underline">roancarmelomorgado@gmail.com ↗</span>
+            </a>
+
+            <a
+                href="https://www.facebook.com/roan.morgado.39"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-between p-3 bg-[#11131c] hover:bg-[#252a3d] border-2 border-black rounded shadow-[3px_3px_0_0_#000] text-sm transition group"
+            >
+              <div class="flex items-center gap-2 text-white font-bold">
+                <span>👥</span> Facebook
+              </div>
+              <span class="text-xs text-blue-400 font-mono group-hover:underline">Roan Morgado ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Fullscreen Lightbox -->
+    <Transition name="fade-lightbox">
+      <div
+          v-if="isLightboxOpen"
+          class="fixed inset-0 z-[70] flex flex-col items-center justify-center bg-black/95 backdrop-blur-md p-4"
+          @click="isLightboxOpen = false"
+      >
+        <button
+            class="absolute top-4 right-6 text-white hover:text-[#ff5e7e] font-black text-4xl bg-transparent border-none cursor-pointer z-10"
+            @click.stop="isLightboxOpen = false"
+        >
+          ✕
+        </button>
+
+        <div class="max-w-[90vw] max-h-[85vh] flex flex-col items-center" @click.stop>
+          <img
+              :src="achievements[currentAchievementIndex].image"
+              :alt="achievements[currentAchievementIndex].title"
+              class="max-w-full max-h-[75vh] object-contain rounded-lg border-4 border-black shadow-[8px_8px_0_0_#ffde59]"
+              @error="(e: any) => { e.target.src = 'https://placehold.co/800x600/181a24/ff5e7e?text=Photo+Pending+Upload'; }"
+          />
+          <div class="mt-4 text-center bg-[#1e2029] border-2 border-black px-4 py-2 rounded shadow-[3px_3px_0_0_#000]">
+            <h3 class="text-base font-black text-[#ffde59]">
+              {{ achievements[currentAchievementIndex].title }}
+            </h3>
+            <p class="text-xs text-slate-300 mt-1">
+              {{ achievements[currentAchievementIndex].description }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </div>
 </template>
 
+<!-- Unscoped cursor overrides -->
+<style>
+html, body {
+  cursor: url('/cursor.png') 0 0, auto !important;
+}
+
+a,
+button,
+[role="button"],
+.cursor-pointer,
+.cursor-zoom-in {
+  cursor: url('/cursor-pointer.png') 0 0, pointer !important;
+}
+</style>
+
 <style scoped>
-.Intro {
-  text-align: center;
-  background-color: slategray;
-  padding: 1rem 0;
+/* Modal Pop Transitions */
+.fade-popup-enter-active,
+.fade-popup-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.header {
-  font-size: 40px;
-}
-
-.Contents {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  max-width: 1000px;
-  margin: 1rem auto 0;
-  padding: 0 1.5rem 6rem;
-}
-
-@media (max-width: 768px) {
-  .Contents {
-    grid-template-columns: 1fr;
-  }
-}
-
-.card {
-  background-color: #22282f;
-  border: 2px solid #3c424a;
-  border-radius: 12px;
-  padding: 1.75rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  color: aliceblue;
-}
-
-.card-title {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.4rem;
-  border-bottom: 2px solid #4f545c;
-  padding-bottom: 0.5rem;
-}
-
-.Catto {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  cursor: pointer;
-  z-index: 1000;
-  transition: transform 0.15s ease-in-out;
-}
-
-.CatSpin{
-  position: fixed;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.catspin{
-  display: block;
-  width: 200px;
-  height: auto;
-}
-
-.Catto:hover {
-  transform: scale(1.05);
-}
-
-.catgif {
-  display: block;
-  width: 200px;
-  height: auto;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
-.cattosad {
-  position: fixed;
-  bottom: 0;
-  right: 1.5rem;
-  cursor: pointer;
-  z-index: 1000;
-  transition: transform 0.15s ease-in-out;
-}
-
-.cattosad:hover {
-  transform: scale(1.05);
-}
-
-.catsad {
-  display: block;
-  width: 140px;
-  height: auto;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
-.click-hint {
-  position: absolute;
-  bottom: 10px;
-  background-color: #1e2124;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  border: 1px solid #4f545c;
-  pointer-events: none;
-}
-
-.click-hint-right {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: #1e2124;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  border: 1px solid #4f545c;
-  pointer-events: none;
-}
-
-.credentials-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 440px;
-  background-color: #1e2124;
-  border: 2px solid #5865f2;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-  z-index: 2000;
-  color: antiquewhite;
-}
-
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #3c424a;
-}
-
-.popup-header h2 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
-.close-btn {
-  background: transparent;
-  border: none;
-  color: #aaa;
-  font-size: 1.5rem;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.close-btn:hover {
-  color: white;
-}
-
-.popup-body ul {
-  margin: 1rem 0 0;
-  padding-left: 1.2rem;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #cfd4dc;
-}
-
-.popup-body a {
-  color: #5865f2;
-  text-decoration: underline;
-  font-weight: 500;
-}
-
-.popup-body a:hover {
-  color: #828df8;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
+.fade-popup-enter-from,
+.fade-popup-leave-to {
   opacity: 0;
-  transform: translate(-50%, calc(-50% + 15px));
+  transform: translate(-50%, -45%) scale(0.95);
+}
+
+.fade-backdrop-enter-active,
+.fade-backdrop-leave-active,
+.fade-lightbox-enter-active,
+.fade-lightbox-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-backdrop-enter-from,
+.fade-backdrop-leave-to,
+.fade-lightbox-enter-from,
+.fade-lightbox-leave-to {
+  opacity: 0;
 }
 </style>
