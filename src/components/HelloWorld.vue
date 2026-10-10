@@ -35,7 +35,6 @@ const playSpinSound = () => {
   audio.play().catch(() => {});
 };
 
-// Plays when the final layer is clicked and your face is revealed
 const playWowSound = () => {
   const audio = new Audio("/wow.mp3");
   audio.volume = 0.6;
@@ -249,10 +248,6 @@ const closeModals = () => {
                   </div>
                 </Transition>
               </div>
-
-              <span class="text-[10px] text-emerald-400 mt-2 font-bold">
-                {{ isFaceRevealed ? 'UNMASKED' : `LAYER ${catMaskIndex + 1}/3` }}
-              </span>
               <button
                   v-if="isFaceRevealed"
                   @click="resetMask"
@@ -330,7 +325,7 @@ const closeModals = () => {
           <ul class="text-xs text-slate-300 space-y-1 pl-1">
             <li class="flex items-center gap-1.5"><span class="text-emerald-400">▶</span> PCB Schematic & Routing</li>
             <li class="flex items-center gap-1.5"><span class="text-emerald-400">▶</span> Embedded Systems & MCU</li>
-            <li class="flex items-center gap-1.5"><span class="text-emerald-400">▶</span> Sensors & Actuators</li>
+            <li class="flex items-center gap-1.5"><span class="text-emerald-400">▶</span> IoT Sensors </li>
           </ul>
         </div>
       </section>
